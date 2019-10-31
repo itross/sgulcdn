@@ -1,0 +1,119 @@
+service:
+  group: SosMedico
+  name: uaa
+  version: 0.1.0
+
+api:
+  endpoint:
+    port: 7777
+    baseRoutingPath: /api/v1
+  security:
+    enabled: true
+    jwt:
+      secret:   R7mT6PaYxC1cfnaDvT51jLWP7fcLaOoMmkxoaaTgZUo7GFv8lcbzm7LJzytHggAU
+      expiration:
+        enabled: true
+        minutes: 13149000
+
+client:
+  timeout: 120s
+  dialerTimeout: 2s
+  tlsHandshakeTimeout: 10s
+  expectContinueTimeout: 4s
+  responseHeaderTimeout: 10s
+  balancing:
+    strategy: round-robin
+  serviceRegistry:
+    type: sgulreg
+    url: http://localhost:9687
+    fallback:
+    - http://localhost:5557/api/v1
+    - http://localhost:5558/api/v1
+
+db:
+  type: mysql
+  host: localhost
+  port: 3306
+  user: smusr
+  password: smpwd
+  database: sm_uaa
+  log: false
+  migrations:
+    enabled: true
+    drop: true
+    singularTableNames: true
+
+management:
+  endpoint:
+    port: 7778
+    baseRoutingPath: /mgmt
+  health:
+    path: /health
+    full: true
+
+# logger configuration
+#     - maxSize:    the maximum size in megabytes of the log file before it gets rotated.
+#                   It defaults to 100 megabytes.
+#     - maxAge:     the maximum number of days to retain old log files based on the timestamp
+#                   encoded in their filename
+#     - maxBackups: the maximum number of old log files to retain.
+#                   The default  is to retain all old log files
+#     - compress:   determines if the rotated log files should be compressed using gzip.
+#                   The default is not to perform compression.
+log:
+  path: logs
+  filename: uaa.log
+  console: true
+  level: info
+  json: false
+  maxSize: 5
+  maxAge: 60
+  maxBackups: 90
+  compress: true
+  caller: false
+  
+amqp:
+  user: guest
+  password: guest
+  host: localhost
+  port: 5672
+  vhost: tests
+  exchanges:
+    - name: user_events
+      type: fanout
+      autoDelete: false
+      durable: true
+      internal: false
+      noWait: false
+  queues:
+    - name: new_user_mailer
+      autoDelete: false
+      durable: true
+      internal: false
+      exclusive: false
+      noWait: false
+  publishers:
+    - name: new_user
+      exchange: user_events
+      routingKey: new_user_routing
+      contentType: application/json
+      deliveryMode: 2
+  subscribers:
+    - name: new_user_mailer
+      queue: new_user_mailer
+      noAck: false
+      noLocal: false
+      noWait: false
+      exclusive: false
+
+broker:
+  events:
+    outbound:
+      - name: evt_new_user
+        publisher: new_user
+      - name: evt_upd_user
+        publisher: upd_user
+    inbound:
+      - name: evt_new_user
+        subscriber: new_user_mailer
+  

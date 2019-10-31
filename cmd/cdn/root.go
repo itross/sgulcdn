@@ -3,24 +3,23 @@ package cdn
 import (
 	"fmt"
 	"os"
-	"os/signal"
 	"strings"
-	"syscall"
-	"time"
 
 	"github.com/itross/sgul"
-	"github.com/spf13/cobra"
+
 	"go.uber.org/zap"
+
+	"github.com/spf13/cobra"
 )
 
 var logger *zap.SugaredLogger
 
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
-	Use:   "sgulcdn",
-	Short: "SGUL CDN Service",
+	Use:   "cdn",
+	Short: "Sgul CDN Service",
 	Long: `---------------------------------------------
-sgul CDN Service v. 0.1.0
+Sgul CDN Service v. 0.1.0
 ---------------------------------------------`,
 }
 
@@ -38,37 +37,11 @@ func init() {
 }
 
 func initialize() {
-	//conf = sgul.GetConfiguration()
 	logger = sgul.GetLogger()
-	//initRegistry()
-
 	env := strings.ToLower(os.Getenv("ENV"))
-	if env != "dev" && env != "development" && env != "" {
-		configureGentleShutdown()
+	if env == "" {
+		env = "dev"
+		logger.Warn("no envirnoment specified, fall back to default")
 	}
-}
-
-func configureGentleShutdown() {
-	gracefulStop := make(chan os.Signal)
-	signal.Notify(gracefulStop, syscall.SIGTERM)
-	signal.Notify(gracefulStop, syscall.SIGINT)
-
-	go func() {
-		sig := <-gracefulStop
-		logger.Infof("[%+v] SIGNAL CAUGHT", sig)
-
-		logger.Info("wait for 2 second to finish processing")
-		time.Sleep(2 * time.Second)
-
-		// Close BoltDB??????
-		//db.Close()
-		//logger.Info("DB connection closed")
-
-		logger.Info("service goes down")
-		logger.Info("Bye!")
-		logger.Sync()
-		os.Exit(0)
-	}()
-
-	logger.Info("service gentle shutdown hook activated")
+	logger.Infow("initialization", "environment", env)
 }
