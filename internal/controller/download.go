@@ -31,7 +31,7 @@ func (dc *DownloadController) Router() chi.Router {
 // NewDownloadController returns a new DownloadController instance.
 func NewDownloadController() *DownloadController {
 	return &DownloadController{
-		Controller: sgul.NewController("/files"),
+		Controller: sgul.NewController("/files/img"),
 	}
 }
 

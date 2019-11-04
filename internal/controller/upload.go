@@ -35,7 +35,7 @@ func (uc *UploadController) Router() chi.Router {
 // NewUploadController returns a new UploadController instance.
 func NewUploadController(uploader service.UploadService) *UploadController {
 	return &UploadController{
-		Controller: sgul.NewController("/upload"),
+		Controller: sgul.NewController("/uploads/img"),
 		uploader:   uploader,
 	}
 }
@@ -55,5 +55,5 @@ func (uc *UploadController) upload(w http.ResponseWriter, r *http.Request) {
 
 func (uc *UploadController) index(w http.ResponseWriter, r *http.Request) {
 	render.Status(r, http.StatusOK)
-	render.HTML(w, r, "<html><body><form method=\"POST\" action=\"/cdn/upload\" enctype=\"multipart/form-data\"><input type=\"file\" name=\"file\"><input type=\"submit\"></form></body></html>")
+	render.HTML(w, r, "<html><body><form method=\"POST\" action=\"/cdn/uploads/img\" enctype=\"multipart/form-data\"><input type=\"file\" name=\"file\"><input type=\"submit\"></form></body></html>")
 }
