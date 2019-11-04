@@ -1,8 +1,15 @@
 package internal
 
-import e "github.com/itross/sgulengine"
+import (
+	"github.com/itross/sgulcdn/internal/controller"
+	"github.com/itross/sgulcdn/internal/service"
+	e "github.com/itross/sgulengine"
+)
 
 // New returns a new sgul Engine instance for the CDN service app.
 func New() *e.Engine {
-	return e.NewWith(e.NewDefaultAPIComponent())
+	uploader := service.NewUploader()
+	uc := controller.NewUploadController(uploader)
+
+	return e.NewWith(e.NewDefaultAPIComponentWith(uc))
 }

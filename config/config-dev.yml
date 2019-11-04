@@ -6,7 +6,7 @@ service:
 api:
   endpoint:
     port: 7777
-    baseRoutingPath: /api/v1
+    baseRoutingPath: /cdn
   security:
     enabled: true
     jwt:
