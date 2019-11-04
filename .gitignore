@@ -10,4 +10,5 @@ output*
 build/
 dist*
 logs/
+store/
 
