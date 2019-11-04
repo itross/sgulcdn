@@ -32,6 +32,8 @@ func (u *uploader) Upload(ctx context.Context, r *http.Request, field string) er
 		return err
 	}
 
+	logger.Infof("IMAGE: %+v", img)
+
 	thumb, err := imageupload.ThumbnailPNG(img, 250, 250)
 	if err != nil {
 		return err
