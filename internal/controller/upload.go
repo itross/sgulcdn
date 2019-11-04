@@ -19,7 +19,7 @@ type UploadController struct {
 	uploader service.UploadService
 }
 
-// BasePath  returns the controller base routing path (implements sgul.RestController).
+// BasePath returns the controller base routing path (implements sgul.RestController).
 func (uc *UploadController) BasePath() string {
 	return uc.Path
 }

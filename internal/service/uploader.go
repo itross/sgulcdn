@@ -32,7 +32,7 @@ func (u *uploader) Upload(ctx context.Context, r *http.Request, field string) er
 		return err
 	}
 
-	thumb, err := imageupload.ThumbnailPNG(img, 500, 500)
+	thumb, err := imageupload.ThumbnailPNG(img, 250, 250)
 	if err != nil {
 		return err
 	}

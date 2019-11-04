@@ -10,6 +10,7 @@ import (
 func New() *e.Engine {
 	uploader := service.NewUploader()
 	uc := controller.NewUploadController(uploader)
+	dc := controller.NewDownloadController()
 
-	return e.NewWith(e.NewDefaultAPIComponentWith(uc))
+	return e.NewWith(e.NewDefaultAPIComponentWith(uc, dc))
 }

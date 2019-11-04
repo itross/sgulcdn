@@ -1,12 +1,12 @@
 service:
-  group: SosMedico
-  name: uaa
+  group: Sgul
+  name: cdn
   version: 0.1.0
 
 api:
   endpoint:
-    port: 7777
-    baseRoutingPath: /api/v1
+    port: 9119
+    baseRoutingPath: /cdn
   security:
     enabled: true
     jwt:
@@ -62,7 +62,7 @@ management:
 #                   The default is not to perform compression.
 log:
   path: logs
-  filename: uaa.log
+  filename: cdn.log
   console: true
   level: info
   json: false
